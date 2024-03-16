@@ -1,14 +1,28 @@
-import discord
-import tokens
-client = discord.Client()
-users = []
-@client.event
-async def on_ready():
-    print('Logado como {0.user}'.format(client))
+import disnake
+from disnake.ext import commands
+from key import get_key
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
+bot = commands.Bot(command_prefix='>>', intents=disnake.Intents.all())
+
+@bot.event
+async def on_ready():
+    print(f'We have logged in as {bot.user}')
+
+@bot.command()
+async def test(ctx):
+    await ctx.send('test')
+
+@bot.command()
+async def ping(ctx):
+    await ctx.send(f'Pong! {round(bot.latency * 1000)}ms')
+
+    bot = commands.Bot(command_prefix='!')
+
+voting_active = False
+lider = ''
+opts = {}
+ids = []
+
         return
 
     if message.content.startswith('$$votar'):

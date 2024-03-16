@@ -43,3 +43,36 @@ async def opcoes(ctx, *args):
         opts[filme.strip()] = 0
     print(opts)
 
+@bot.command()
+async def votar(ctx, *args):
+    global voting_active, opts, ids
+    if not voting_active:
+        return
+    option = ' '.join(args)
+    if ctx.author.id in ids:
+        await ctx.send(f"{ctx.author.name}, você já votou!")
+        return
+    if option in opts:
+        opts[option] += 1
+        ids.append(ctx.author.id)
+        await ctx.send(f"Voto computado para {option}")
+    else:
+        await ctx.send(f"Opção {option} não existe")
+
+@bot.command()
+async def resultado(ctx):
+    global voting_active, opts
+    if not voting_active:
+        return
+    if ctx.author != lider:
+        await ctx.send('Apenas o lider pode encerrar a votação')
+        return
+    if not voting_active:
+        return
+    voting_active = False
+    await ctx.send(f"Resultado: {opts}")
+    await ctx.send(f"Vencedor: {max(opts, key=opts.get)}")
+    opts.clear()
+    ids.clear()
+
+bot.run(get_key())

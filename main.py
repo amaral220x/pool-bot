@@ -23,21 +23,23 @@ lider = ''
 opts = {}
 ids = []
 
+@bot.command()
+async def democracia(ctx):
+    global voting_active, opts, ids, lider
+    opts = {}
+    ids = []
+    voting_active = True
+    await ctx.send('Viva a democracia!')
+    msg = await ctx.send('Vamos votar? Por favor, responda essa mensagem com os filmes que vocês querem votar')
+    lider = ctx.author
+@bot.command()
+async def opcoes(ctx, *args):
+    global voting_active, opts
+    if not voting_active:
         return
+    join = ' '.join(args)
+    filmes = join.split(',')
+    for filme in filmes:
+        opts[filme.strip()] = 0
+    print(opts)
 
-    if message.content.startswith('$$votar'):
-        messages = await message.channel.send('Por favor reaja a esta mensagem quem participará da votação')
-        await messages.add_reaction("✅")
-        def check(reaction,user):
-            return str(reaction.emoji) == '✅', user
-        confirmation, user= await client.wait_for("reaction_add", check=check) 
-        if confirmation: 
-            users.append(user)
-            await user.send("Olá, me mande o link do filme assim. '$$filme [link]'")
-    if message.content.startswith('$$filme'):
-        if message.author in users:
-            await message.author.send("Ok")
-        
-
-
-client.run(tokens.gerar_token())
